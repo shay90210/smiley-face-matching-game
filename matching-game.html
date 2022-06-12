@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Matching Game</title>
+        <style>
+            img {
+                position: absolute;
+            }
+            div {
+                position: absolute;
+                width: 500px;
+                height: 500px;
+            }
+            #rightSide {
+                left: 500px;
+                border-left: 1px solid;
+            }
+            body {
+                background: #3baea0;
+            }
+            h1 {
+                text-align: right;
+                margin-right: 410px;
+                font-size: 72px;
+                color: #352f44;
+            }
+            p {
+                text-align: right;
+                margin-right: 325px;
+                font-size: 20px;
+                color: #352f44;
+            }
+            span {
+                font-weight: bold;
+            }
+            .restart-btn {
+                display: block;
+                margin: auto 630px auto auto;
+                padding: 10px;
+                background-color: #afc5ff;
+                border: #afc5ff solid;
+                border-radius: 10px;
+                font-weight: bold;
+                font-size: 16px;
+            }
+            button:hover {
+                cursor: pointer;
+                background: #05004e;
+                color: white;
+                border: #05004e;
+            }
+        </style>
+    </head>
+    <body onload="generateFaces()">
+        <h1>Matching Game</h1>
+        <p>
+            <span>Directions:</span>
+            Click the extra smilling face on the left to advance to the next level.</p>
+        <button class="restart-btn">Restart Game</button>
+        <div id="leftSide"></div>
+        <div id="rightSide"></div>
+        <script>
+
+            let numberOfFaces = 5;
+            const theLeftSide = document.getElementById("leftSide");
+            const theRightSide = document.getElementById("rightSide");
+
+            function generateFaces() {
+                for (let i = 0; i < numberOfFaces; i++) {
+                    let face = document.createElement("img");
+                    face.src = "./images/smile.png";
+                    const randomTop = Math.floor(Math.random() * 400) + 1;
+                    const randomLeft = Math.floor(Math.random() * 400) + 1;
+                    face.style.top = randomTop + 'px';
+                    face.style.left = randomLeft + 'px';
+                    theLeftSide.appendChild(face);
+                }
+
+                const leftSideImages = theLeftSide.cloneNode(true);
+                leftSideImages.removeChild(leftSideImages.lastChild);
+                theRightSide.appendChild(leftSideImages);
+
+                theLeftSide
+                    .lastChild
+                    .addEventListener('click', nextLevel);
+
+                document
+                    .body
+                    .addEventListener('click', gameOver);
+            }
+
+            function nextLevel() {
+                event.stopPropagation();
+                numberOfFaces += 5;
+                while (theLeftSide.firstChild) {
+                    theLeftSide.removeChild(theLeftSide.lastChild);
+                }
+                while (theRightSide.firstChild) {
+                    theRightSide.removeChild(theRightSide.lastChild);
+                }
+
+                generateFaces('click');
+            }
+
+            function gameOver() {
+                alert("Let's start a new game!");
+                document
+                    .body
+                    .removeEventListener('click', gameOver);
+                theLeftSide
+                    .lastChild
+                    .removeEventListener('click', nextLevel);
+            }
+            document
+                .querySelector('.restart-btn')
+                .addEventListener('click', function () {
+                    window
+                        .location
+                        .reload();
+                    return false;
+                });
+        </script>
+    </body>
+</html>
